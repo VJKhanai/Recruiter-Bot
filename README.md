@@ -122,9 +122,3 @@ conftest.py     test setup (temporary database)
 tests/          pytest tests
 Part2/          SQL Detective files
 ```
-
-## AI tools
-
-Write this yourself, honestly. For example: "I used Claude as a tutor and pair-programmer.
-It helped me design the schema and scoring and explained each step. I ran and tested every
-part myself and can explain it."
