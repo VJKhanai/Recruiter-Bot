@@ -62,3 +62,4 @@ SELECT department, name, placements
 FROM ranked
 WHERE rnk = 1
 ORDER BY department;
+-- 

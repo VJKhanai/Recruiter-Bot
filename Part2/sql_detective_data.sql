@@ -84,3 +84,5 @@ INSERT INTO interviews VALUES
 (22, 10, 5, 'Technical', '2026-01-28', NULL),
 (23, 11, 7, 'Final', '2026-02-20', 'passed'),
 (24, 6, 7, 'Final', '2026-02-21', 'failed');
+
+-- 
