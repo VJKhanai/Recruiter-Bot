@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 
 import db
 import matching
@@ -6,30 +6,63 @@ import matching
 app = Flask(__name__)
 
 
-def exists(table, row_id):
-    """Check if a row with this id exists. Table names are hardcoded below, never user input."""
+def find_name(table, column, row_id):
+    """Return the name/title for an id, or None if the id doesn't exist.
+    table and column are hardcoded below, never user input."""
     conn = db.get_conn()
-    row = conn.execute(f"SELECT 1 FROM {table} WHERE id = ?", (row_id,)).fetchone()
+    row = conn.execute(
+        f"SELECT {column} FROM {table} WHERE id = ?", (row_id,)
+    ).fetchone()
     conn.close()
-    return row is not None
+    return row[0] if row else None
+
+
+@app.route("/jobs")
+def list_jobs():
+    q = request.args.get("q", "").strip()
+    conn = db.get_conn()
+    rows = conn.execute(
+        "SELECT id, title, min_experience FROM jobs "
+        "WHERE title LIKE ? ORDER BY id",
+        (f"%{q}%",),
+    ).fetchall()
+    conn.close()
+    return jsonify([dict(r) for r in rows])
+
+
+@app.route("/candidates")
+def list_candidates():
+    q = request.args.get("q", "").strip()
+    conn = db.get_conn()
+    rows = conn.execute(
+        "SELECT id, name, experience_years, availability FROM candidates "
+        "WHERE name LIKE ? ORDER BY id",
+        (f"%{q}%",),
+    ).fetchall()
+    conn.close()
+    return jsonify([dict(r) for r in rows])
 
 
 @app.route("/jobs/<int:job_id>/matches")
 def job_matches(job_id):
-    if not exists("jobs", job_id):
+    title = find_name("jobs", "title", job_id)
+    if title is None:
         return jsonify({"error": "job not found"}), 404
     return jsonify({
         "job_id": job_id,
+        "title": title,
         "matches": matching.rank_candidates_for_job(job_id),
     })
 
 
 @app.route("/candidates/<int:candidate_id>/matches")
 def candidate_matches(candidate_id):
-    if not exists("candidates", candidate_id):
+    name = find_name("candidates", "name", candidate_id)
+    if name is None:
         return jsonify({"error": "candidate not found"}), 404
     return jsonify({
         "candidate_id": candidate_id,
+        "name": name,
         "matches": matching.rank_jobs_for_candidate(candidate_id),
     })
 
