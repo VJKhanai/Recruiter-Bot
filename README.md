@@ -1,43 +1,218 @@
 # Recruiter Bot
 
-A small backend service that ranks candidates for a job, and jobs for a candidate.
-Python + Flask + SQLite. All database access is hand-written SQL (no ORM, no query builder).
+Recruiter Bot is a Python backend application that matches candidates with suitable job openings based on their skills, work experience, availability, and personality traits.
 
-## Setup
+The main idea behind this project is simple: given a job, the application finds and ranks the most suitable candidates. It also works the other way around, allowing us to find suitable jobs for a particular candidate.
 
-Needs Python 3.9 or newer (tested on 3.13). No database server to install, SQLite comes with Python.
+I built this project using **Python, Flask, and SQLite3**. Flask is used to create the API, while SQLite stores the candidate details, job requirements, and matching results.
+
+All database operations are written using raw SQL queries, without using an ORM or query builder.
+
+## 1. Technologies Used
+
+- **Python:** Handles the application logic and calculates matching scores.
+- **Flask:** Creates the REST API endpoints.
+- **SQLite3:** Stores candidate information, job openings, skills, and matching results.
+- **SQL:** Used to create tables, manage relationships, and retrieve data.
+- **Pytest:** Used to test the API and matching functionality.
+
+SQLite is included with Python, so there is no need to install a separate database server.
+
+## 2. Project Structure
+
+The project contains the following files:
+
+```text
+Recruiter_Bot/
+│
+├── app.py
+├── db.py
+├── schema.sql
+├── seed.py
+├── matching.py
+├── conftest.py
+├── requirements.txt
+├── README.md
+│
+├── tests/
+│
+└───Part2/
+    ├── sql_detective.sql
+    ├── sql_detective_data.sql
+    ├── load_detective.py
+    ├── run_detective.py
+    └── sql_detective_results.txt
+```
+
+### What each file does
+
+- **app.py:** Contains the Flask API routes used to retrieve candidates, jobs, and matching results.
+- **db.py:** Establishes the SQLite database connection and creates the database tables.
+- **schema.sql:** Contains the SQL queries for creating tables and defining relationships.
+- **seed.py:** Inserts the sample candidate and job data and generates the initial matching scores.
+- **matching.py:** Contains the matching algorithm and queries used to rank candidates and jobs.
+- **conftest.py:** Sets up a temporary database for testing.
+- **tests/:** Contains the automated tests.
+- **Part2/:** Contains the SQL Detective assignment and its queries.
+
+## 3. How to Run the Project
+
+Follow these steps to set up and run the application on your computer.
+
+### Step 1: Open the project
+
+Download or clone the project and open the `Recruiter_Bot` folder in any code Editor
+
+Open a new terminal in VS Code using:
+
+**Terminal → New Terminal**
+
+Make sure the terminal is opened in the project's main directory.
+
+### Step 2: Create a virtual environment
+
+The project requires Python 3.9 or newer. It has been tested using Python 3.13.
+
+Run:
 
 ```bash
 python -m venv venv
-venv\Scripts\activate          # Mac/Linux: source venv/bin/activate
-pip install -r requirements.txt
-
-python db.py       # creates the tables from schema.sql
-python seed.py     # loads 15 candidates and 6 jobs, then scores every pair
-python app.py      # starts the server on http://127.0.0.1:5000
 ```
 
-Run the tests with `python -m pytest -v` (17 tests).
+This creates a virtual environment named `venv` to keep the project's dependencies separate from other Python projects.
 
-## API
+Activate it using the appropriate command.
 
-Ids are easy to look up, so you don't need to remember them:
+For Windows PowerShell:
+
+```powershell
+.\venv\Scripts\Activate.ps1
+```
+
+For Windows Command Prompt:
+
+```cmd
+venv\Scripts\activate.bat
+```
+
+For macOS or Linux:
+
+```bash
+source venv/bin/activate
+```
+
+Once activated, the terminal should show `(venv)` at the beginning of the line.
+
+### Step 3: Install dependencies
+
+Run:
+
+```bash
+pip install -r requirements.txt
+```
+
+This installs the Python packages required to run the application.
+
+### Step 4: Create the database
+
+Run:
+
+```bash
+python db.py
+```
+
+This executes the SQL statements from `schema.sql` and creates the required database tables.
+
+The project uses SQLite, so the database is stored locally in a file named `recruiter.db`.
+
+### Step 5: Insert sample data
+
+Run:
+
+```bash
+python seed.py
+```
+
+This loads the sample data containing:
+
+- 15 candidates
+- 6 job openings
+- Candidate skills and traits
+- Job requirements and culture keywords
+
+It also runs the matching algorithm and stores the calculated results in the `matches` table.
+
+**Note:** Running `seed.py` again clears and reloads the sample data. It should not be rerun if you want to preserve changes made to the database.
+
+### Step 6: Start the Flask server
+
+Run:
+
+```bash
+python app.py
+```
+
+The application should start locally at:
+
+```text
+http://127.0.0.1:5000
+```
+
+Keep this terminal running while testing the API.
+
+The server must remain active for the API endpoints to work.
+
+## 4. Testing the API
+
+The application provides REST API endpoints for retrieving candidates, jobs, and ranked matching results.
+
+You can test these endpoints directly through a browser, Postman, or the VS Code terminal using `curl`.
+
+For Windows PowerShell, use `curl.exe` instead of `curl`.
+
+### Get all jobs
 
 ```bash
 curl http://127.0.0.1:5000/jobs
+```
+
+This returns a list of available job openings.
+
+### Get all candidates
+
+```bash
 curl http://127.0.0.1:5000/candidates
+```
+
+This returns the candidates stored in the database.
+
+### Search for a job
+
+```bash
 curl "http://127.0.0.1:5000/jobs?q=detective"
+```
+
+This searches for jobs matching the word `detective`.
+
+### Search for a candidate
+
+```bash
 curl "http://127.0.0.1:5000/candidates?q=sherlock"
 ```
 
-Ranked matches:
+This searches for candidates whose names match `sherlock`.
+
+### Find candidates matching a job
 
 ```bash
-curl http://127.0.0.1:5000/jobs/1/matches          # candidates for a job
-curl http://127.0.0.1:5000/candidates/1/matches    # jobs for a candidate
+curl http://127.0.0.1:5000/jobs/1/matches
 ```
 
-Example (`/jobs/1/matches`, shortened):
+This endpoint finds candidates suitable for the job with ID `1`.
+
+The results are arranged according to their matching scores, with the highest-scoring candidates appearing first.
+
+Example response:
 
 ```json
 {
@@ -54,71 +229,259 @@ Example (`/jobs/1/matches`, shortened):
 }
 ```
 
-An unknown id returns 404 with `{"error": "job not found"}` (or `candidate not found`).
-On PowerShell use `curl.exe`, because plain `curl` is an alias for something else.
+This response shows the candidate's name, matching score, and the reason behind the score.
 
-## Schema
+The example is shortened for readability.
 
-- `candidates`, `jobs`: one row each.
-- `skills`: every skill name stored once. `candidate_skills` and `job_skills` link to it, so
-  "which skills do they share" is a plain JOIN + COUNT instead of string parsing.
-- `candidate_traits` and `job_culture`: small lists of words.
-- `matches`: one row per scored (job, candidate) pair, with the score and the reason text.
+### Find jobs matching a candidate
 
-Availability is limited by a CHECK constraint to `immediate`, `2_weeks` or `not_looking`,
-so the scoring never meets a value it doesn't know.
+```bash
+curl http://127.0.0.1:5000/candidates/1/matches
+```
 
-## Matching algorithm
+This endpoint finds jobs suitable for the candidate with ID `1`.
 
-Score out of 100:
+Just like the previous endpoint, the jobs are ranked from the highest matching score to the lowest.
 
-| Part | Points | Rule |
-|---|---|---|
-| Skill overlap | 60 | matched skills / required skills x 60 |
-| Experience | 25 | full points if the candidate meets the minimum, otherwise proportional |
-| Availability | 10 | immediate 10, 2 weeks 6, not looking 0 |
-| Culture | 5 | traits matching the job's culture keywords / keywords x 5 |
+### Handling invalid IDs
 
-Decisions and trade-offs:
+If a requested job or candidate does not exist, the API returns a `404 Not Found` response.
 
-- **Skills weigh the most**, because they decide whether someone can do the job. Experience
-  comes second. Availability and culture only nudge the ranking.
-- **No skill overlap means no match.** Without this, a candidate with zero relevant skills
-  could still score 35 points from experience and availability and appear in the list.
-- **Under-experienced candidates get partial credit** instead of being dropped.
-- **Ties** are broken by more experience, then by name, so the order is always the same.
-- **Matches are precomputed** and stored in the `matches` table by `seed.py`. The API only
-  reads them with an indexed ORDER BY. Trade-off: reads are fast, but the table has to be
-  refreshed (`matching.refresh_matches()`) whenever candidates or jobs change.
-- **SQL fetches the counts, Python applies the weights.** All weights sit at the top of
-  `matching.py`, so tuning them is a one-line change.
+For example:
 
-Known limitations: skills match by exact name (no synonyms), every required skill counts
-equally, and a weak skill match can still score around 45-55 because experience and
-availability add points. A minimum skill ratio would fix that.
+```bash
+curl http://127.0.0.1:5000/jobs/979/matches
+```
 
-## Part 2: SQL Detective
+Response:
 
-Answers are in `Part2/sql_detective.sql`, one query per question. To run them:
+```json
+{
+  "error": "job not found"
+}
+```
+
+This makes it easier to identify invalid requests instead of returning incorrect data.
+
+## 5. Database Design
+
+I designed the database using separate tables for candidates, jobs, skills, and their relationships.
+
+The main tables are:
+
+| Table            | Purpose                                                 |
+| ---------------- | ------------------------------------------------------- |
+| candidates       | Stores candidate details, experience, and availability  |
+| jobs             | Stores job openings and minimum experience requirements |
+| skills           | Stores unique skill names                               |
+| candidate_skills | Connects candidates with their skills                   |
+| job_skills       | Connects jobs with their required skills                |
+| candidate_traits | Stores candidate personality traits                     |
+| job_culture      | Stores culture-related keywords for jobs                |
+| matches          | Stores candidate-job matching scores and explanations   |
+
+Instead of storing all skills as comma-separated text, I used separate relationship tables.
+
+This makes it easier to compare candidate skills with job requirements using SQL JOIN operations.
+
+It also avoids storing the same skill name repeatedly.
+
+Candidate availability is restricted to three values:
+
+- `immediate`
+- `2_weeks`
+- `not_looking`
+
+This restriction is defined in the database schema to prevent invalid availability values from being stored.
+
+## 6. How the Matching Algorithm Works
+
+Candidates with no matching skills are excluded, because otherwise experience and
+availability alone could put an unrelated person in the list. A known weakness is that a
+candidate with only one of three required skills can still score around 45 to 55, since
+experience and availability add points. A minimum skill ratio would fix that.
+
+The matching algorithm compares candidates with job requirements and calculates a score out of 100.
+
+I divided the score into four parts:
+
+| Factor                | Maximum Points |
+| --------------------- | -------------: |
+| Skills                |             60 |
+| Experience            |             25 |
+| Availability          |             10 |
+| Culture compatibility |              5 |
+| **Total**             |        **100** |
+
+### Skill Matching (60 points)
+
+Skills have the highest weight because they are the most important factor in deciding whether a candidate is suitable for a job.
+
+The score depends on how many required skills the candidate possesses.
+
+For example, if a job requires four skills and the candidate has three of them:
+
+```text
+Skill score = (3 / 4) × 60 = 45 points
+```
+
+If a candidate has no matching skills, the algorithm excludes that candidate from the matching results.
+
+### Experience (25 points)
+
+The algorithm compares the candidate's experience with the minimum experience required for the job.
+
+If the candidate meets or exceeds the required experience, they receive all 25 points.
+
+If they have less experience, they receive a proportional score.
+
+For example, a candidate with two years of experience applying for a job requiring four years receives:
+
+```text
+Experience score = (2 / 4) × 25 = 12.5 points
+```
+
+I chose this approach because candidates who have slightly less experience may still be suitable if they have the required skills.
+
+### Availability (10 points)
+
+Candidates receive points based on how soon they are available to join.
+
+| Availability   | Points |
+| -------------- | -----: |
+| Immediate      |     10 |
+| Within 2 weeks |      6 |
+| Not looking    |      0 |
+
+This gives a small advantage to candidates who can join earlier.
+
+### Culture Compatibility (5 points)
+
+The algorithm also compares candidate traits with the culture keywords associated with a job.
+
+For example, if a job expects someone who is analytical and autonomous, a candidate with one matching trait receives partial points.
+
+Culture compatibility has a smaller weight because technical skills and experience are more important for the ranking.
+
+### Final Score
+
+The final score is calculated by adding the points from all four factors.
+
+```text
+Final Score = Skill Score
+            + Experience Score
+            + Availability Score
+            + Culture Score
+```
+
+Candidates and jobs are ranked according to this score.
+
+When candidates have equal scores, experience and then name are used to determine the order.
+
+## 7. Storing and Retrieving Matches
+
+After inserting the sample data, `seed.py` runs the matching algorithm and saves the results in the `matches` table.
+
+Each stored match contains the job ID, candidate ID, calculated score, and a short explanation.
+
+When an API request is made, the application reads these stored results instead of recalculating every score.
+
+This keeps API responses fast and avoids unnecessary calculations.
+
+One limitation is that if candidate or job information changes, the stored scores must be updated.
+
+For that, the project provides:
+
+```python
+matching.refresh_matches()
+```
+
+This recalculates and stores the matching results.
+
+## 8. Automated Testing
+
+I also included automated tests using Pytest.
+
+To run the tests, open a terminal in the main project folder and execute:
+
+```bash
+python -m pytest -v
+```
+
+The test suite contains 17 tests.
+
+The tests help check whether the application works as expected and whether changes to the code affect existing functionality.
+
+A temporary database is used during testing, so the actual `recruiter.db` file is not modified.
+
+## 9. Part 2 — SQL Detective
+
+The second part of the assignment focuses on solving database problems using SQL queries.
+
+All the SQL answers are written in:
+
+```text
+Part2/sql_detective.sql
+```
+
+To run this part, open the terminal and navigate to the `Part2` folder:
 
 ```bash
 cd Part2
+```
+
+Load the required data:
+
+```bash
 python load_detective.py
+```
+
+Then execute the SQL queries:
+
+```bash
 python run_detective.py
 ```
 
-Expected output is saved in `Part2/sql_detective_results.txt`.
-Q3 groups by the lowercased email, because Ananya Rao appears twice with different casing.
+The expected results are available in:
 
-## Project layout
+```text
+Part2/sql_detective_results.txt
+```
 
-```
-app.py          Flask routes
-db.py           database connection and schema loader
-schema.sql      table definitions
-seed.py         sample data + first scoring run
-matching.py     scoring logic and ranking queries
-conftest.py     test setup (temporary database)
-tests/          pytest tests
-Part2/          SQL Detective files
-```
+For Question 3, I used the lowercase version of the email address when grouping records. This handles cases where the same email address appears with different capitalization, such as the records for Ananya Rao.
+
+## 10. Limitations and Possible Improvements
+
+The current application works with the provided sample data, but there are a few areas that could be improved.
+
+First, skills are matched using exact names. This means similar skills with different names are treated as separate skills.
+
+Second, all required skills have equal importance. In a real recruitment system, some skills might be mandatory while others could be optional.
+
+Third, a candidate with limited matching skills may still receive a reasonable score because experience and availability also contribute points.
+
+One possible improvement would be to set a minimum percentage of matching skills before a candidate is included in the results.
+
+For a larger system, I would also consider automatically updating the scores whenever candidate or job information changes.
+
+## 12. AI Tools Used
+
+ChatGPT was used throughout this project to help with learning and development.
+
+Instead of just generating solutions, AI was used to better my understanding of various topics. This included database design, flask API development, and how best to create the logic to match candidates to jobs.
+
+As an example, whilst creating the matching algorithm, AI was used to look at how to best create a scoring system based on the skillset, experience, availability and cultural fit. This helped me understand how to weight different factors.
+
+SQL concepts were also looked at, including JOIN, foreign keys and relationships. AI was also useful to help me solve any errors.
+
+If any code or improvements were suggested by the AI, they were looked at, implemented and then checked by using API requests and automated testing.
+
+Overall, the use of AI helped me learn new concepts and consider different options. It also identified any mistakes I had made. Whilst using AI, I focused on understanding how the different parts fit together and how it was implemented.
+
+## Conclusion
+
+Recruiter Bot is a backend application that matches candidates with job openings using a scoring algorithm based on skills, experience, availability, and culture compatibility.
+
+The project demonstrates how Flask, SQLite, and raw SQL can be used together to build a working REST API.
+
+It also includes automated tests and SQL exercises to demonstrate the database and backend functionality.

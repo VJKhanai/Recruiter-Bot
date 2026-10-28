@@ -1,0 +1,32 @@
+-- Q1: open job postings and who owns them
+['id', 'title', 'department', 'opened_date', 'recruiter']
+(1, 'Backend Engineer I', 'Engineering', '2026-01-05', 'Priya Shah')
+(2, 'Backend Engineer I', 'Engineering', '2026-01-10', 'Daniel Ortiz')
+(4, 'Backend Engineer II', 'Engineering', '2026-02-01', 'Priya Shah')
+(5, 'DevOps Engineer', 'Infrastructure', '2026-01-20', 'Wei Zhang')
+
+-- Q2: number of applicants who reached the Final stage, per posting
+['id', 'title', 'finalists']
+(1, 'Backend Engineer I', 2)
+(2, 'Backend Engineer I', 2)
+(3, 'Data Analyst', 1)
+(4, 'Backend Engineer II', 2)
+(5, 'DevOps Engineer', 0)
+(6, 'Data Analyst', 0)
+(7, 'Backend Engineer I', 2)
+
+-- Q3: people who applied to more than one posting
+['email', 'full_name', 'postings']
+('ananya.rao@mail.com', 'Ananya Rao', 2)
+('ben.turner@mail.com', 'Ben Turner', 2)
+('elena.popescu@mail.com', 'Elena Popescu', 2)
+
+-- Q4: final stage pass rate per recruiter (only if they had 3 or more finals)
+['id', 'name', 'total_finals', 'passed', 'pass_rate']
+(1, 'Priya Shah', 4, 3, 75.0)
+(2, 'Daniel Ortiz', 4, 2, 50.0)
+
+-- Q5 (bonus): top recruiter in each department by successful placements
+['department', 'name', 'placements']
+('Data', 'Fatima Al-Sayed', 1)
+('Engineering', 'Priya Shah', 3)
