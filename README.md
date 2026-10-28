@@ -67,8 +67,3 @@ Answers are in `Part2/sql_detective.sql`, one query per question.
 To run them: `cd Part2`, then `python load_detective.py`, then `python run_detective.py`.
 Q3 groups by lowercased email because the same person appears with different casing.
 
-## AI tools
-
-(Write your own honest note here. For example: I used Claude as a tutor and
-pair-programmer. It suggested the schema and scoring design, and I ran every
-step myself, checked the output, and learned why each part works.)
