@@ -1,7 +1,6 @@
 import sqlite3
 
 conn = sqlite3.connect("sql_detective.db")
-
 with open("sql_detective.sql", encoding="utf-8") as f:
     chunks = f.read().split(";")
 
@@ -22,3 +21,5 @@ print(output)
 
 with open("sql_detective_results.txt", "w", encoding="utf-8") as f:
     f.write(output)
+
+#
