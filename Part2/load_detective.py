@@ -12,3 +12,4 @@ with open("sql_detective_data.sql", encoding="utf-8") as f:
 conn.commit()
 conn.close()
 print("Loaded sql_detective.db")
+
