@@ -62,7 +62,7 @@ Follow these steps to set up and run the application on your computer.
 ### Step 1: Open the project
 
 Download or clone the project using https://github.com/VJKhanai/Recruiter-Bot.git
-and open the `Recruiter_Bot` folder in any code Editor
+and open the `Recruiter-Bot` folder in any code Editor
 
 Open a new terminal in VS Code using:
 
@@ -295,12 +295,7 @@ Candidate availability is restricted to three values:
 
 This restriction is defined in the database schema to prevent invalid availability values from being stored.
 
-## 6. How the Matching Algorithm Works
-
-Candidates with no matching skills are excluded, because otherwise experience and
-availability alone could put an unrelated person in the list. A known weakness is that a
-candidate with only one of three required skills can still score around 45 to 55, since
-experience and availability add points. A minimum skill ratio would fix that.
+## 6. Matching Algorithm and Design Decisions
 
 The matching algorithm compares candidates with job requirements and calculates a score out of 100.
 
@@ -454,10 +449,12 @@ For Question 3, I used the lowercase version of the email address when grouping 
 ## 10. Limitations and Possible Improvements
 
 The current application works with the provided sample data, but there are a few areas that could be improved.
-
 First, skills are matched using exact names. This means similar skills with different names are treated as separate skills.
 
-Second, all required skills have equal importance. In a real recruitment system, some skills might be mandatory while others could be optional.
+Second, Candidates with no matching skills are excluded, because otherwise experience and
+availability alone could put an unrelated person in the list. A known weakness is that a
+candidate with only one of three required skills can still score around 45 to 55, since
+experience and availability add points. A minimum skill ratio would fix that.
 
 Third, a candidate with limited matching skills may still receive a reasonable score because experience and availability also contribute points.
 
@@ -465,7 +462,7 @@ One possible improvement would be to set a minimum percentage of matching skills
 
 For a larger system, I would also consider automatically updating the scores whenever candidate or job information changes.
 
-## 12. AI Tools Used
+## 11. AI Tools Used
 
 ChatGPT was used throughout this project to help with learning and development.
 
@@ -478,11 +475,3 @@ SQL concepts were also looked at, including JOIN, foreign keys and relationships
 If any code or improvements were suggested by the AI, they were looked at, implemented and then checked by using API requests and automated testing.
 
 Overall, the use of AI helped me learn new concepts and consider different options. It also identified any mistakes I had made. Whilst using AI, I focused on understanding how the different parts fit together and how it was implemented.
-
-## Conclusion
-
-Recruiter Bot is a backend application that matches candidates with job openings using a scoring algorithm based on skills, experience, availability, and culture compatibility.
-
-The project demonstrates how Flask, SQLite, and raw SQL can be used together to build a working REST API.
-
-It also includes automated tests and SQL exercises to demonstrate the database and backend functionality.
