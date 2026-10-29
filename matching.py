@@ -58,10 +58,10 @@ def score_pair(row):
     # 2. Experience
     if row["experience_years"] >= row["min_experience"]:
         exp_pts = W_EXPERIENCE
-        exp_text = f"{row['experience_years']} yrs meets {row['min_experience']} min"
+        exp_text = f"{row['experience_years']} years meets {row['min_experience']} minimum"
     else:
         exp_pts = W_EXPERIENCE * row["experience_years"] / row["min_experience"]
-        exp_text = f"{row['experience_years']} yrs is below {row['min_experience']} min"
+        exp_text = f"{row['experience_years']} years is below {row['min_experience']} minimum"
 
     # 3. Availability
     avail_pts = AVAILABILITY_POINTS[row["availability"]]
