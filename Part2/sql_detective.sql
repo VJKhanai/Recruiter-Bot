@@ -42,7 +42,7 @@ GROUP BY r.id, r.name
 HAVING COUNT(*) >= 3
 ORDER BY pass_rate DESC;
 
--- Q5 (bonus): top recruiter in each department by successful placements
+-- Q5 Top recruiter in each department by successful placements
 -- a placement = passed the Final stage
 -- using RANK() so if two recruiters tie, both are shown
 WITH placed AS (
