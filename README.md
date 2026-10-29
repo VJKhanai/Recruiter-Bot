@@ -464,7 +464,7 @@ For a larger system, I would also consider automatically updating the scores whe
 
 ## 11. AI Tools Used
 
-ChatGPT was used throughout this project to help with learning and development.
+ChatGPT was used in this project to help with learning and development.
 
 Instead of just generating solutions, AI was used to better my understanding of various topics. This included database design, flask API development, and how best to create the logic to match candidates to jobs.
 
