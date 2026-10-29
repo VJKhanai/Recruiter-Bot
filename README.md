@@ -61,7 +61,8 @@ Follow these steps to set up and run the application on your computer.
 
 ### Step 1: Open the project
 
-Download or clone the project using  and open the `Recruiter_Bot` folder in any code Editor
+Download or clone the project using https://github.com/VJKhanai/Recruiter-Bot.git
+and open the `Recruiter_Bot` folder in any code Editor
 
 Open a new terminal in VS Code using:
 
