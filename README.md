@@ -462,14 +462,12 @@ The current application works with the provided sample data, but a few things co
 
 ## 11. AI Tools Used
 
-ChatGPT was used in this project to help with learning and development.
+## 11. AI Tools Used
 
-Instead of just generating solutions, AI was used to better my understanding of various topics. This included database design, flask API development, and how best to create the logic to match candidates to jobs.
+I used Claude as a learning and development assistant while building this project.
 
-As an example, whilst creating the matching algorithm, AI was used to look at how to best create a scoring system based on the skillset, experience, availability and cultural fit. This helped me understand how to weight different factors.
+I started by explaining my own outline of the project: the tables, the scoring idea and the API endpoints. Claude then suggested alternative approaches, for example different ways to design the schema, other scoring formulas (an experience bonus and a skill multiplier), and ways to structure the Flask routes. I compared the options, tried some of them on the sample data, and chose the ones I could explain and defend.
 
-SQL concepts were also looked at, including JOIN, foreign keys and relationships. AI was also useful to help me solve any errors.
+It also helped me with documentation. I used it to organise this README, explain my decisions clearly, and write the SQL Detective notes.
 
-If any code or improvements were suggested by the AI, they were looked at, implemented and then checked by using API requests and automated testing.
-
-Overall, the use of AI helped me learn new concepts and consider different options. It also identified any mistakes I had made. Whilst using AI, I focused on understanding how the different parts fit together and how it was implemented.
+I did not accept suggestions as they came. I questioned each one, thought it through, and proposed my own idea before going ahead. For example, I switched from MySQL back to SQLite so a reviewer does not have to install a database server, I undid a more detailed response format because it was too hard to read, and I kept the simpler scoring formula after testing the alternatives. I ran every step myself and checked the results with curl requests and automated tests, so I can explain how each part works.
