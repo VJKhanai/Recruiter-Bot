@@ -462,9 +462,7 @@ The current application works with the provided sample data, but a few things co
 
 ## 11. AI Tools Used
 
-## 11. AI Tools Used
-
-I used Claude as a learning and development assistant while building this project.
+I used Claude and ChatGPT as a learning and development assistant while building this project.
 
 I started by explaining my own outline of the project: the tables, the scoring idea and the API endpoints. Claude then suggested alternative approaches, for example different ways to design the schema, other scoring formulas (an experience bonus and a skill multiplier), and ways to structure the Flask routes. I compared the options, tried some of them on the sample data, and chose the ones I could explain and defend.
 
