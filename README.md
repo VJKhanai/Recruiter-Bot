@@ -23,7 +23,7 @@ SQLite is included with Python, so there is no need to install a separate databa
 The project contains the following files:
 
 ```text
-Recruiter_Bot/
+Recruiter-Bot/
 │
 ├── app.py
 ├── db.py
@@ -224,7 +224,7 @@ Example response:
       "candidate_id": 1,
       "name": "Sherlock H.",
       "score": 97.5,
-      "reason": "Skills 3/3 (deduction, forensics, pattern-recognition); 8 yrs meets 3 min; immediate; culture 1/2"
+      "reason": "Skills 3/3 (deduction, forensics, pattern-recognition); 8 years meets 3 minimum; immediate; culture 1/2"
     }
   ]
 }
@@ -374,7 +374,11 @@ is "Not looking". I didn't hide him. Availability is worth only 10 of the 100 po
 he still ranks second for Sales Engineer (67.5), behind Dwight (75.0), who can start now.
 Candidates and jobs are ranked according to this score.
 
-When candidates have equal scores, experience and then name are used to determine the order.
+When candidates have equal scores, experience and then name are used to determine the order. When jobs are ranked for a candidate, the job title is used instead of the name.
+
+### The Michael Scott case
+
+The brief says Michael Scott is applying for Sales Engineer, but his availability is "Not looking". I didn't hide him. Availability is worth only 10 of the 100 points, so he still ranks second for Sales Engineer (67.5), behind Dwight (75.0), who can start now.
 
 ## 7. Storing and Retrieving Matches
 
@@ -450,19 +454,11 @@ For Question 3, I used the lowercase version of the email address when grouping 
 
 ## 10. Limitations and Possible Improvements
 
-The current application works with the provided sample data, but there are a few areas that could be improved.
-First, skills are matched using exact names. This means similar skills with different names are treated as separate skills.
+The current application works with the provided sample data, but a few things could be improved.
 
-Second, Candidates with no matching skills are excluded, because otherwise experience and
-availability alone could put an unrelated person in the list. A known weakness is that a
-candidate with only one of three required skills can still score around 45 to 55, since
-experience and availability add points. A minimum skill ratio would fix that.
-
-Third, a candidate with limited matching skills may still receive a reasonable score because experience and availability also contribute points.
-
-One possible improvement would be to set a minimum percentage of matching skills before a candidate is included in the results.
-
-For a larger system, I would also consider automatically updating the scores whenever candidate or job information changes.
+- **Exact skill names.** Skills are matched by exact name, so similar skills with different names are treated as different skills.
+- **Weak skill matches can still score fairly well.** Candidates with no matching skills are excluded, but a candidate with only one of three required skills can still score around 45 to 55, because experience and availability add points. A minimum percentage of matching skills would fix this. I tested multiplying the whole score by the skill ratio, but kept the simpler formula, because the multiplier counted skills twice and made the scores harder to explain.
+- **Scores can go stale.** The stored scores must be recalculated with `matching.refresh_matches()` whenever candidate or job data changes. For a larger system I would refresh them automatically.
 
 ## 11. AI Tools Used
 
