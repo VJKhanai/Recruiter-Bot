@@ -369,7 +369,9 @@ Final Score = Skill Score
             + Availability Score
             + Culture Score
 ```
-
+**Michael Scott.** The brief says he is applying for Sales Engineer, but his availability
+is "Not looking". I didn't hide him. Availability is worth only 10 of the 100 points, so
+he still ranks second for Sales Engineer (67.5), behind Dwight (75.0), who can start now.
 Candidates and jobs are ranked according to this score.
 
 When candidates have equal scores, experience and then name are used to determine the order.
